@@ -1,0 +1,58 @@
+﻿
+ @model List<SETENA.GestionVacaciones.Models.SolicitudVacaciones>
+
+@{
+    ViewData["Title"] = "Solicitudes Pendientes";
+}
+
+<h2>Solicitudes de Vacaciones</h2>
+
+<table class="table table-bordered table-hover shadow-sm">
+    <thead class="table-success">
+        <tr>
+            <th>Empleado</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Estado</th>
+            <th>Observaciones</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.NombreUsuario</td>
+                <td>@item.FechaInicio.ToString("yyyy-MM-dd")</td>
+                <td>@item.FechaFin.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <span class="badge bg-@(
+                    item.Estado == "Aprobado" ? "success" :
+                    item.Estado == "Rechazado" ? "danger" : "warning"
+                )">@item.Estado</span>
+                </td>
+                <td>@item.Observaciones</td>
+                <td>
+                    @if (item.Estado == "Pendiente")
+                    {
+                        <form asp-action="CambiarEstado" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="hidden" name="estado" value="Aprobado" />
+                            <button class="btn btn-success btn-sm">Aprobar</button>
+                        </form>
+
+                        <form asp-action="CambiarEstado" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="hidden" name="estado" value="Rechazado" />
+                            <button class="btn btn-danger btn-sm">Rechazar</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Sin acciones</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,163 @@
+﻿@using System.Security.Claims
+@{
+    var rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+    var nombre = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+    var fotoPerfil = User.Claims.FirstOrDefault(c => c.Type == "FotoPerfil")?.Value ?? "/img/default-user.png";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - SETENA Ambiental</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/estiloSetena.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/estiloInicio.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/estilo-perfil.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/estilo-tablas.css" asp-append-version="true" />
+
+
+    <!-- FontAwesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-MU4M9e8GcD3OC5wWz+XdcmCvlE7WYl1Z9+OnvDRCgCjOazj0O1Q0fKtA2NYsm/3tFbMFs97TD8V3BhLptk0mDg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet" />
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-forest shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold text-light" asp-controller="Home" asp-action="Index">SETENA Ambiental</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-end" id="menuNav">
+                    <ul class="navbar-nav">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-light d-flex align-items-center" href="#" id="perfilDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="@fotoPerfil" alt="Foto perfil" class="rounded-circle me-2" style="width:32px; height:32px; object-fit:cover; cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modalFotoPerfil" />
+                                    <span>@nombre</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilDropdown">
+
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" asp-controller="Perfil" asp-action="Perfil"><i class="fas fa-id-badge me-2"></i>Perfil</a></li>
+                                    <li class="nav-item"><a class="nav-link text-light" asp-controller="Jefatura" asp-action="Pendientes"><i class="fas fa-id-badge me-2"></i> Pendientes</a></li>
+                                    @if (rol == "Administrador")
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Vacaciones" asp-action="Solicitar"><i class="fas fa-tachometer-alt me-2"></i>Solocitar Vacaciones</a></li>
+                                        <li><a class="dropdown-item" asp-controller="AdminSolicitudes" asp-action="GestionUsuarios"><i class="fas fa-cogs me-2"></i>Gestión de Usuarios</a></li>
+                                    }
+                                    else if (rol == "Empleado")
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Vacaciones" asp-action="Solicitar"><i class="fas fa-tachometer-alt me-2"></i>Solocitar Vacaciones</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Home" asp-action="MisSolicitudes"><i class="fas fa-envelope-open-text me-2"></i>Mis Solicitudes</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Vacaciones" asp-action="Solicitar"><i class="fas fa-tachometer-alt me-2"></i>Solocitar Vacaciones</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Vacaciones" asp-action="MisVacaciones"><i class="fas fa-envelope-open-text me-2"></i>Historial de Solicitudes</a></li>
+                                    }
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item text-danger" asp-controller="Cuenta" asp-action="Logout"><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link text-light" asp-controller="Cuenta" asp-action="Login"><i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión</a></li>
+                            <li class="nav-item"><a class="nav-link text-light" asp-controller="Cuenta" asp-action="Registro"><i class="fas fa-user-plus me-1"></i> Registro</a></li>
+                            <li class="nav-item"><a class="nav-link text-light" asp-controller="Jefatura" asp-action="Pendientes"><i class="fas fa-user-plus me-1"></i> Pendientes</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="banner-ambiental text-center text-white d-flex align-items-center justify-content-center">
+        <div>
+            <h1 class="display-5">Sistema de Gestión de Vacaciones</h1>
+            <p class="lead">Secretaría Técnica Nacional Ambiental (SETENA)</p>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="footer bg-forest-dark text-light pt-4 pb-3 mt-5">
+        <div class="container">
+            <div class="row">
+
+                <!-- Información SETENA -->
+                <div class="col-md-4 mb-3">
+                    <h5>Contacto SETENA</h5>
+                    <p><strong>Teléfono:</strong> (+506) 2234-3420</p>
+                    <p><strong>Dirección:</strong> Avenida 21, C. 9 y 11, 100 m Norte y 100 m Oeste de la Iglesia de Ladrillo, San Francisco de Goicoechea, San José</p>
+                </div>
+
+                <!-- Redes Sociales -->
+                <div class="col-md-4 mb-3">
+                    <h5>Redes Sociales</h5>
+                    <div class="d-flex gap-3 fs-4">
+                        <a href="https://www.facebook.com/setena.minae" target="_blank" title="Facebook"><i class="fab fa-facebook-f text-light"></i></a>
+                        <a href="https://www.youtube.com/channel/UC4VPZ_CVi-mXRCTBtDKGMQA" target="_blank" title="YouTube"><i class="fab fa-youtube text-light"></i></a>
+                        <a href="https://www.waze.com/es-419/live-map/directions?to=ll.9.942734%2C-84.072983" target="_blank" title="Ubicación Waze"><i class="fas fa-map-marker-alt text-light"></i></a>
+                    </div>
+                </div>
+
+                <!-- Recursos Humanos -->
+                <div class="col-md-4 mb-3">
+                    <h5>👥 Recursos Humanos</h5>
+                    <p>
+                        <strong>Contacto 1</strong><br />
+                        Profesional Analista<br />
+                        Ext: 110<br />
+                        <a href="mailto:agonzalez@setena.go.cr" class="text-light">contacto1@setena.go.cr</a>
+                    </p>
+
+                    <p>
+                        <strong>Contacto 2</strong><br />
+                        Coordinadora<br />
+                        Ext: 105<br />
+                        <a href="mailto:cmunoz@setena.go.cr" class="text-light">contacto2@setena.go.cr</a>
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="text-center mt-3 small">
+                &copy; 2025 - SETENA - <a asp-controller="Home" asp-action="Privacy" class="text-light">Política de Privacidad</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="modalFotoPerfil" tabindex="-1" aria-labelledby="modalFotoPerfilLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-transparent border-0 shadow-none">
+                <div class="modal-body p-0">
+                    <img src="@fotoPerfil" alt="Foto perfil ampliada" class="img-fluid rounded" />
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,60 @@
+﻿:root {
+    --verde-principal: #006341;
+    --verde-secundario: #6DBE45;
+    --gris-oscuro: #4A4A4A;
+    --gris-claro: #D9D9D9;
+    --blanco: #FFFFFF;
+}
+
+body {
+    background-color: var(--blanco);
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--gris-oscuro);
+}
+
+.header-setena {
+    background-color: var(--verde-principal);
+    color: var(--blanco);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar-setena a {
+    color: var(--blanco);
+    margin-right: 1rem;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+    .navbar-setena a:hover {
+        color: var(--verde-secundario);
+    }
+
+.container-setena {
+    background-color: var(--gris-claro);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.btn-verde {
+    background-color: var(--verde-principal);
+    color: var(--blanco);
+    border: none;
+}
+
+    .btn-verde:hover {
+        background-color: var(--verde-secundario);
+        color: var(--gris-oscuro);
+    }
+
+.footer-setena {
+    background-color: var(--gris-claro);
+    color: var(--gris-oscuro);
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    margin-top: 3rem;
+}

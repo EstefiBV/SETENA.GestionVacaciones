@@ -1,0 +1,38 @@
+﻿.tabla-setena {
+    background-color: var(--gris-claro);
+    padding: 2rem;
+    border-radius: 1rem;
+}
+
+.tabla-vacaciones {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+    .tabla-vacaciones thead tr {
+        background-color: #e9f5e1;
+        color: #2e4c29;
+        font-weight: bold;
+        border-bottom: 2px solid #badbcc;
+    }
+
+    .tabla-vacaciones tbody tr {
+        background-color: #ffffff;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.08);
+    }
+
+        .tabla-vacaciones tbody tr:hover {
+            background-color: #f0fff4;
+            transform: scale(1.01);
+        }
+
+    .tabla-vacaciones td, .tabla-vacaciones th {
+        padding: 14px 18px;
+        vertical-align: middle;
+    }
+
+    .tabla-vacaciones .btn {
+        font-size: 0.85rem;
+    }

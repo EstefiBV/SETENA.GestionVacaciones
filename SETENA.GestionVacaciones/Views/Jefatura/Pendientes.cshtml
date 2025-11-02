@@ -1,0 +1,163 @@
+﻿@model List<SETENA.GestionVacaciones.Models.SolicitudVacaciones>
+@{
+    ViewData["Title"] = "Revisión de Solicitudes de Vacaciones";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .panel {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        transition: transform 0.2s;
+    }
+
+    .panel:hover {
+        transform: translateY(-3px);
+    }
+
+    .titulo {
+        font-weight: 600;
+        color: #2e7d32;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-aprobar {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-aprobar:hover {
+        background-color: #43a047;
+    }
+
+    .btn-rechazar {
+        background-color: #d32f2f;
+        border: none;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-rechazar:hover {
+        background-color: #c62828;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #e8f5e9;
+    }
+
+    .estado {
+        font-weight: 500;
+        border-radius: 8px;
+        padding: 4px 10px;
+    }
+
+    .modal-content {
+        border-radius: 12px;
+        border: none;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="panel">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="titulo">Solicitudes Pendientes de Revisión</h3>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm">Volver al inicio</a>
+        </div>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info text-center shadow-sm">
+                No hay solicitudes pendientes por revisar.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-success">
+                        <tr>
+                            <th>Funcionario</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Observaciones</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model)
+                        {
+                            <tr>
+                                <td>@s.NombreUsuario</td>
+                                <td>@s.FechaInicio.ToString("dd/MM/yyyy")</td>
+                                <td>@s.FechaFin.ToString("dd/MM/yyyy")</td>
+                                <td>@s.Observaciones</td>
+                                <td>
+                                    <button class="btn btn-aprobar btn-sm me-2" data-bs-toggle="modal"
+                                            data-bs-target="#modalAccion" data-id="@s.Id" data-accion="Aprobar">
+                                        <i class="bi bi-check-circle"></i> Aprobar
+                                    </button>
+                                    <button class="btn btn-rechazar btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#modalAccion" data-id="@s.Id" data-accion="Rechazar">
+                                        <i class="bi bi-x-circle"></i> Rechazar
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modal para aprobación/rechazo -->
+<div class="modal fade" id="modalAccion" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header bg-verde text-white" style="background-color:#4CAF50;">
+                <h5 class="modal-title" id="modalLabel">Confirmar Acción</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formAccion" method="post">
+                <div class="modal-body">
+                    <p id="textoAccion" class="fw-semibold"></p>
+                    <div class="mb-3">
+                        <label for="comentario" class="form-label">Comentario (opcional)</label>
+                        <textarea name="comentario" id="comentario" class="form-control" rows="3"
+                                  placeholder="Escriba un comentario para el funcionario..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const modalAccion = document.getElementById('modalAccion');
+    const formAccion = document.getElementById('formAccion');
+    const textoAccion = document.getElementById('textoAccion');
+
+    modalAccion.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const id = button.getAttribute('data-id');
+        const accion = button.getAttribute('data-accion');
+        textoAccion.textContent = `¿Desea ${accion.toLowerCase()} esta solicitud?`;
+
+        formAccion.action = `/Jefatura/${accion}`;
+        formAccion.innerHTML += `<input type="hidden" name="id" value="${id}">`;
+    });
+</script>

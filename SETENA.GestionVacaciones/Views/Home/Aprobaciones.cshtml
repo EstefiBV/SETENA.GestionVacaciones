@@ -1,0 +1,39 @@
+﻿<div class="tabla-setena mt-5">  
+    <h3 class="mb-4 text-success-emphasis fw-semibold">📋 Solicitudes Pendientes</h3>
+
+    <div class="table-responsive shadow rounded bg-white">
+        <table class="table tabla-vacaciones align-middle">
+            <thead>
+                <tr>
+                    <th>👤 Usuario</th>
+                    <th>📅 Fecha Inicio</th>
+                    <th>📆 Fecha Fin</th>
+                    <th>📌 Estado</th>
+                    <th>⚙️ Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var solicitud in Model)
+                {
+                    <tr>
+                        <td>@solicitud.NombreUsuario</td>
+                        <td>@solicitud.FechaInicio.ToString("dd/MM/yyyy")</td>
+                        <td>@solicitud.FechaFin.ToString("dd/MM/yyyy")</td>
+                        <td><span class="badge bg-warning text-dark">@solicitud.Estado</span></td>
+                        <td>
+                            <form asp-action="ActualizarEstado" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@solicitud.Id" />
+                                <button name="estado" value="Aprobado" class="btn btn-success btn-sm me-1">
+                                    ✅ Aprobar
+                                </button>
+                                <button name="estado" value="Rechazado" class="btn btn-danger btn-sm">
+                                    ❌ Rechazar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

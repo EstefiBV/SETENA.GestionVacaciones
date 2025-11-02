@@ -1,0 +1,59 @@
+﻿@model SolicitudVacaciones
+@{
+    ViewData["Title"] = "Nueva Solicitud";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<div class="container mt-4">
+    <h3>Solicitud de Vacaciones</h3>
+    <form asp-action="Solicitar" method="post">
+        <input type="hidden" asp-for="UsuarioId" />
+        <input type="hidden" asp-for="FechaInicio" />
+        <input type="hidden" asp-for="FechaFin" />
+        <input type="hidden" asp-for="Estado" value="Pendiente" />
+
+        <div class="mb-3">
+            <label class="form-label">Nombre completo</label>
+            <input class="form-control" value="@Model.NombreUsuario" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Seleccione rango de fechas</label>
+            <input type="text" id="rangoFechas" class="form-control" placeholder="Ej: del 10 al 15 de julio" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Observaciones</label>
+            <textarea asp-for="Observaciones" class="form-control" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-verde">Enviar Solicitud</button>
+    </form>
+</div>
+
+<script>
+    const feriadosCR = [
+        "2025-01-01", "2025-04-17", "2025-04-18", "2025-05-01", "2025-07-25",
+        "2025-08-02", "2025-08-15", "2025-09-15", "2025-12-25"
+    ];
+
+    flatpickr("#rangoFechas", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        disable: [
+            function(date) {
+                return (date.getDay() === 0 || date.getDay() === 6); // domingos y sábados
+            },
+            ...feriadosCR
+        ],
+        onChange: function(selectedDates, dateStr, instance) {
+            if (selectedDates.length === 2) {
+                document.querySelector("input[name='FechaInicio']").value = selectedDates[0].toISOString().split('T')[0];
+                document.querySelector("input[name='FechaFin']").value = selectedDates[1].toISOString().split('T')[0];
+            }
+        }
+    });
+</script>

@@ -1,0 +1,35 @@
+﻿@* @page
+@model SETENA.GestionVacaciones.Views.Home.CrearModel
+@{
+}
+ *@
+
+ @model SETENA.GestionVacaciones.Models.SolicitudVacaciones
+
+@{
+    ViewData["Title"] = "Nueva Solicitud";
+}
+
+<h2>Nueva Solicitud de Vacaciones</h2>
+
+<form asp-action="Crear" method="post" class="form-horizontal p-4 bg-light rounded shadow-sm">
+    <div class="form-group mb-3">
+        <label asp-for="FechaInicio">Fecha de Inicio</label>
+        <input asp-for="FechaInicio" type="date" class="form-control" />
+        <span asp-validation-for="FechaInicio" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="FechaFin">Fecha de Fin</label>
+        <input asp-for="FechaFin" type="date" class="form-control" />
+        <span asp-validation-for="FechaFin" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Observaciones">Observaciones</label>
+        <textarea asp-for="Observaciones" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Enviar Solicitud</button>
+    <a asp-action="MisSolicitudes" class="btn btn-secondary ms-2">Ver Mis Solicitudes</a>
+</form>

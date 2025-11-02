@@ -1,0 +1,45 @@
+﻿@model List<SETENA.GestionVacaciones.Models.SolicitudVacaciones>
+
+@{
+    ViewData["Title"] = "Mis Solicitudes de Vacaciones";
+}
+
+<div class="container-setena mt-4">
+    <h3 class="mb-4">📅 Mis Solicitudes de Vacaciones</h3>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">No has enviado solicitudes de vacaciones todavía.</div>
+    }
+    else
+    {
+        <table class="table table-hover shadow-sm rounded table-striped border">
+            <thead class="table-success text-center">
+                <tr>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Estado</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.FechaInicio.ToString("dd/MM/yyyy")</td>
+                        <td>@item.FechaFin.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <span class="badge bg-@(
+                                  item.Estado == "Aprobado" ? "success" :
+                                  item.Estado == "Rechazado" ? "danger" : "warning"
+                                                        )">
+                            <i class="fas fa-circle me-1"></i> @item.Estado
+                        </span>
+                    </td>
+                    <td>@item.Observaciones</td>
+                </tr>
+                        }
+            </tbody>
+        </table>
+    }
+</div>

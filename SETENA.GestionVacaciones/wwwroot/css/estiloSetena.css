@@ -1,0 +1,114 @@
+﻿/* Colores y tipografía generales */
+body {
+    font-family: 'Inter', 'Roboto', 'Noto Sans', sans-serif;
+    background-color: #F9F9F6; /* marfil cálido */
+    color: #222222;
+}
+
+a {
+    color: #468FAF;
+    text-decoration: none;
+}
+
+    a:hover {
+        color: #FFB703;
+        text-decoration: underline;
+    }
+
+/* Navbar personalizado */
+.bg-forest {
+    background-color: #2F3E46 !important; /* gris azul oscuro */
+}
+
+.bg-forest-dark {
+    background-color: #1E2A30 !important; /* más oscuro para footer */
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+/* Banner ambiental */
+.banner-ambiental {
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center;
+    background-size: cover;
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+}
+
+    .banner-ambiental h1,
+    .banner-ambiental p {
+        color: #F9F9F6;
+    }
+
+/* Footer estilos */
+.footer h5 {
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.footer p,
+.footer ul {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.footer a {
+    color: #468FAF;
+    transition: color 0.3s ease;
+}
+
+    .footer a:hover {
+        color: #FFB703;
+    }
+
+.footer ul {
+    padding-left: 0;
+}
+
+    .footer ul li {
+        margin-bottom: 0.3rem;
+    }
+
+
+/* Estilos para botones */
+.btn-outline-success {
+    color: #468FAF;
+    border-color: #468FAF;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+    .btn-outline-success:hover {
+        background-color: #468FAF;
+        color: #F9F9F6;
+    }
+
+/* Utilidades */
+.mt-4 {
+    margin-top: 1.5rem !important;
+}
+
+.mb-3 {
+    margin-bottom: 1rem !important;
+}
+
+.fs-4 {
+    font-size: 1.5rem !important;
+}
+
+.navbar-nav .nav-link i.bi-person-circle:hover {
+    color: #FFB703; /* amarillo cálido */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+/* Estilos para el perfil de usuario */
+

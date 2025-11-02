@@ -1,0 +1,30 @@
+﻿.perfil-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #2F3E46;
+    margin-bottom: 10px;
+}
+
+.bg-verde {
+    background-color: #468FAF;
+}
+
+.btn-verde {
+    background-color: #FFB703;
+    color: #222;
+    font-weight: 600;
+    border: none;
+}
+
+    .btn-verde:hover {
+        background-color: #e09d00;
+        color: #fff;
+    }
+
+.badge {
+    font-size: 0.9rem;
+    padding: 0.5em 0.8em;
+    border-radius: 1em;
+}

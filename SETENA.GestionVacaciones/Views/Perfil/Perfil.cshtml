@@ -1,0 +1,288 @@
+﻿@model Usuario
+@{
+    ViewData["Title"] = "Mi Perfil";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow border-0 perfil-usuario">
+                <div class="card-header bg-verde text-white text-center">
+                    <h4 class="mb-0">Mi Perfil</h4>
+                    <span class="badge bg-warning text-dark mt-2">@Model.Rol</span>
+                </div>
+
+                <div class="card-body">
+                    @* Mensajes de éxito o error *@
+                    @if (TempData["Mensaje"] != null)
+                    {
+                        <div class="alert alert-success text-center">
+                            @TempData["Mensaje"]
+                        </div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger text-center">
+                            @TempData["Error"]
+                        </div>
+                    }
+
+                    <form method="post" enctype="multipart/form-data" asp-action="Perfil">
+                        <div class="text-center mb-4">
+                            <img id="fotoPerfil" src="@((string.IsNullOrEmpty(Model.FotoPerfil)) ? "/img/default-user.png" : Model.FotoPerfil)"
+                                 class="rounded-circle perfil-img mb-3" alt="Foto de perfil de @Model.NombreCompleto"
+                                 style="width: 140px; height: 140px; object-fit: cover; transition: transform 0.3s;" />
+
+                            <input type="hidden" asp-for="Id" />
+                            <input type="hidden" id="FotoPerfilRecortada" name="FotoPerfilRecortada" />
+
+                            <div class="mb-3 mt-3">
+                                <label class="form-label">Actualizar Foto</label>
+                                <input type="file" name="Foto" class="form-control" accept="image/*" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Nombre completo</label>
+                            <input asp-for="NombreCompleto" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Correo electrónico</label>
+                            <input asp-for="Correo" class="form-control" disabled />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Nueva contraseña</label>
+                            <input asp-for="Contrasena" type="password" class="form-control" placeholder="Dejar en blanco para no cambiar" />
+                        </div>
+
+                        <button type="submit" class="btn btn-verde w-100">Guardar Cambios</button>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-light text-center">
+                    <a asp-controller="Cuenta" asp-action="Logout" class="btn btn-outline-danger btn-sm me-2">Cerrar sesión</a>
+                    <a href="#" class="btn btn-link text-danger mt-2">Eliminar cuenta</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Solicitudes != null && Model.Solicitudes.Any())
+    {
+        <div class="mt-5">
+            <h5 class="mb-3">Historial de Solicitudes de Vacaciones</h5>
+            <div class="table-responsive shadow-sm rounded">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-success">
+                        <tr>
+                            <th>Inicio</th>
+                            <th>Fin</th>
+                            <th>Estado</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model.Solicitudes)
+                        {
+                            <tr>
+                                <td>@s.FechaInicio.ToShortDateString()</td>
+                                <td>@s.FechaFin.ToShortDateString()</td>
+                                <td>
+                                    <span class="badge @(s.Estado == "Aprobado" ? "bg-success" : s.Estado == "Rechazado" ? "bg-danger" : "bg-warning text-dark")">
+                                        @s.Estado
+                                    </span>
+                                </td>
+                                <td>@s.Observaciones</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts {
+    <script>
+        let offsetX = 0, offsetY = 0, dragging = false, imgPos = {x: 100, y: 100};
+        const recorteSize = 200;
+
+        // Variables para filtros
+        let brillo = 100, contraste = 100, blancoNegro = false;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputFoto = document.querySelector('input[name="Foto"]');
+            const imgRecorte = document.getElementById('imgRecorte');
+
+            const brilloInput = document.getElementById('brillo');
+            const contrasteInput = document.getElementById('contraste');
+            const blancoNegroInput = document.getElementById('blancoNegro');
+
+            function aplicarFiltros() {
+                let filtros = `brightness(${brillo}%) contrast(${contraste}%)`;
+                if (blancoNegro) {
+                    filtros += ' grayscale(100%)';
+                }
+                imgRecorte.style.filter = filtros;
+            }
+
+            brilloInput.addEventListener('input', function () {
+                brillo = this.value;
+                aplicarFiltros();
+            });
+
+            contrasteInput.addEventListener('input', function () {
+                contraste = this.value;
+                aplicarFiltros();
+            });
+
+            blancoNegroInput.addEventListener('change', function () {
+                blancoNegro = this.checked;
+                aplicarFiltros();
+            });
+
+            inputFoto.addEventListener('change', function (e) {
+                if (e.target.files && e.target.files[0]) {
+                    let reader = new FileReader();
+                    reader.onload = function (ev) {
+                        let modal = new bootstrap.Modal(document.getElementById('modalRecorteFoto'));
+                        modal.show();
+
+                        document.getElementById('modalRecorteFoto').addEventListener('shown.bs.modal', function handler() {
+                            imgRecorte.src = ev.target.result;
+                            imgRecorte.style.top = imgPos.y + 'px';
+                            imgRecorte.style.left = imgPos.x + 'px';
+                            aplicarFiltros();
+
+                            imgRecorte.onmousedown = function (e) {
+                                dragging = true;
+                                offsetX = e.offsetX;
+                                offsetY = e.offsetY;
+                            };
+                            document.onmousemove = function (e) {
+                                if (dragging) {
+                                    let rect = imgRecorte.parentElement.getBoundingClientRect();
+                                    imgPos.x = e.clientX - rect.left - offsetX;
+                                    imgPos.y = e.clientY - rect.top - offsetY;
+                                    imgRecorte.style.left = imgPos.x + 'px';
+                                    imgRecorte.style.top = imgPos.y + 'px';
+                                }
+                            };
+                            document.onmouseup = function () {
+                                dragging = false;
+                            };
+
+                                    document.getElementById('btnRecortarFoto').onclick = function () {
+            let canvas = document.getElementById('canvasRecorte');
+            let ctx = canvas.getContext('2d');
+
+            // Tamaño de recorte
+            let recorteSize = 200;
+
+            // Obtener tamaño natural de la imagen (original)
+            let naturalWidth = imgRecorte.naturalWidth;
+            let naturalHeight = imgRecorte.naturalHeight;
+
+            // Obtener tamaño actual (renderizado)
+            let displayedWidth = imgRecorte.width;
+            let displayedHeight = imgRecorte.height;
+
+            // Calcular factor de escala
+            let scaleX = naturalWidth / displayedWidth;
+            let scaleY = naturalHeight / displayedHeight;
+
+            // Área del recorte (del div recorteArea)
+            let recorteArea = document.getElementById('recorteArea');
+            let recorteLeft = recorteArea.offsetLeft;
+            let recorteTop = recorteArea.offsetTop;
+
+            // Coordenadas del origen para el drawImage en la imagen original, aplicando escala y posición actual de la imagen
+            let sx = (recorteLeft - imgPos.x) * scaleX;
+            let sy = (recorteTop - imgPos.y) * scaleY;
+
+            ctx.clearRect(0, 0, recorteSize, recorteSize);
+
+            // Aplicar filtros al contexto
+            ctx.filter = `brightness(${brillo}%) contrast(${contraste}%)` + (blancoNegro ? ' grayscale(100%)' : '');
+
+            ctx.drawImage(
+                imgRecorte,
+                sx, sy, recorteSize * scaleX, recorteSize * scaleY, // área de origen en la imagen original, escalado
+                0, 0, recorteSize, recorteSize // área destino en el canvas
+            );
+
+            let base64 = canvas.toDataURL('image/png');
+            document.getElementById('fotoPerfil').src = base64;
+            document.getElementById('FotoPerfilRecortada').value = base64;
+
+            // Cerrar modal
+            bootstrap.Modal.getInstance(document.getElementById('modalRecorteFoto')).hide();
+        };
+
+                            document.getElementById('modalRecorteFoto').removeEventListener('shown.bs.modal', handler);
+                        });
+                    };
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+        });
+    </script>
+}
+
+<!-- Modal para recortar la imagen -->
+<div class="modal fade" id="modalRecorteFoto" tabindex="-1" aria-labelledby="modalRecorteFotoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalRecorteFotoLabel">Recortar Foto de Perfil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="mb-3">
+                    <label>Filtros:</label><br />
+                    <input type="range" id="brillo" min="0" max="200" value="100" /> Brillo
+                    <input type="range" id="contraste" min="0" max="200" value="100" /> Contraste
+                    <input type="checkbox" id="blancoNegro" /> Blanco y Negro
+                </div>
+
+                <div style="position:relative; display:inline-block; min-width:400px; min-height:400px;">
+                    <img id="imgRecorte" style="max-width:400px; max-height:400px; cursor:move; position:absolute;" />
+                    <div id="recorteArea" style="position:absolute; border:2px dashed #28a745; width:200px; height:200px; top:100px; left:100px; pointer-events:none;"></div>
+                </div>
+                <canvas id="canvasRecorte" width="200" height="200" style="display:none;"></canvas>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnRecortarFoto">Recortar y Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalRecorteFoto" tabindex="-1" aria-labelledby="modalRecorteFotoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalRecorteFotoLabel">Recortar Foto de Perfil</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"     aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <div style="position:relative; display:inline-block; min-width:400px; min-height:400px;">
+          <img id="imgRecorte" style="max-width:400px; max-height:400px; cursor:move; position:absolute;" />
+          <div id="recorteArea" style="position:absolute; border:2px dashed #28a745; width:200px; height:200px; top:100px; left:100px; pointer-events:none;"></div>
+        </div>
+        <canvas id="canvasRecorte" width="200" height="200" style="display:none;"></canvas>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="btnRecortarFoto">Recortar y Guardar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

@@ -1,0 +1,34 @@
+﻿@* @page
+@model SETENA.GestionVacaciones.Views.Home.DashboardModel
+@{
+} *@
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="container-setena mt-4">
+    <h2>Bienvenido, @User.Identity.Name</h2>
+    <p class="mb-4">Desde aquí puedes administrar tus solicitudes de vacaciones.</p>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Solicitudes Activas</h5>
+                    <p class="display-6 text-success">3</p>
+                    <a asp-controller="Vacaciones" asp-action="Index" class="btn btn-verde">Ver Detalles</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Días Disponibles</h5>
+                    <p class="display-6 text-primary">10</p>
+                    <a asp-controller="Vacaciones" asp-action="Nueva" class="btn btn-verde">Solicitar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

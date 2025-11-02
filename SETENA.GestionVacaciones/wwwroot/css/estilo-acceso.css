@@ -1,0 +1,98 @@
+﻿:root {
+    --verde-setena: #468f3c;
+    --verde-hover: #3a7832;
+    --gris-claro: #f4f7f4;
+    --gris-texto: #2f2f2f;
+    --fondo-tarjeta: rgba(255, 255, 255, 0.85);
+    --sombra: 0 10px 30px rgba(0, 0, 0, 0.15);
+    --borde-suave: 12px;
+    --fuente: 'Inter', 'Segoe UI', sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: var(--fuente);
+    background: linear-gradient(to right, #e8f5e9, #f1f8f4, #e0f2f1);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-login {
+    background: var(--fondo-tarjeta);
+    padding: 3rem;
+    border-radius: var(--borde-suave);
+    box-shadow: var(--sombra);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 420px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+    .card-login h3 {
+        color: var(--verde-setena);
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+.form-control {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+    .form-control:focus {
+        border-color: var(--verde-setena);
+        box-shadow: 0 0 0 0.15rem rgba(70, 143, 60, 0.25);
+    }
+
+.btn-verde {
+    background-color: var(--verde-setena);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem;
+    width: 100%;
+    margin-top: 1rem;
+    transition: background-color 0.3s ease-in-out;
+}
+
+    .btn-verde:hover {
+        background-color: var(--verde-hover);
+    }
+
+.extra-link {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    color: #468faF;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+    .extra-link:hover {
+        text-decoration: underline;
+    }
+
+.text-danger {
+    text-align: center;
+    margin-top: 1rem;
+    color: #d62828;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

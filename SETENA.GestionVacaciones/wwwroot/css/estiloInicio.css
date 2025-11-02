@@ -1,0 +1,79 @@
+﻿body {
+    background-color: #F9F9F6;
+    font-family: 'Poppins', sans-serif;
+    color: #2F3E46;
+}
+
+/* Sección de bienvenida */
+.bienvenida {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.img-banner {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+
+.bienvenida-texto {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(47, 62, 70, 0.7);
+    padding: 30px;
+    border-radius: 20px;
+    color: #ffffff;
+}
+
+/* Tips de vacaciones */
+.tips-vacaciones {
+    background-color: #E6F2EA;
+    padding: 50px 20px;
+    border-radius: 25px;
+}
+
+.tips-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+}
+
+.tip-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 300px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+    .tip-card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .tip-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 5px solid #468FAF;
+    }
+
+    .tip-card h3 {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 15px;
+        color: #2F3E46;
+    }
+
+    .tip-card p {
+        font-size: 15px;
+        margin: 0 15px 15px;
+        color: #333;
+    }

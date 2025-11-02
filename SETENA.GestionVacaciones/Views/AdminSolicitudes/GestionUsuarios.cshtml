@@ -1,0 +1,55 @@
+﻿@model List<SETENA.GestionVacaciones.Models.Usuario>
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+}
+
+<h2 class="mb-4">Gestión de Usuarios</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["Mensaje"]
+    </div>
+}
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var usuario in Model)
+        {
+            <tr>
+                <form asp-controller="AdminSolicitudes" asp-action="ActualizarUsuario" method="post">
+                    <input type="hidden" name="Id" value="@usuario.Id" />
+                <td>
+                    <input type="text" name="NombreCompleto" value="@usuario.NombreCompleto" class="form-control" required />
+                </td>
+                <td>
+                    <input type="email" name="Correo" value="@usuario.Correo" class="form-control" required />
+                </td>
+                <td>
+                    <select name="Rol" class="form-select" required>
+                        <option value="" selected="@(string.IsNullOrEmpty(usuario.Rol) ? "selected" : null)">--- Seleccione un rol ---</option>
+                        <option value="Usuario" selected="@(usuario.Rol == "Usuario" ? "selected" : null)">Usuario</option>
+                        <option value="Empleado" selected="@(usuario.Rol == "Empleado" ? "selected" : null)">Empleado</option>
+                        <option value="Administrador" selected="@(usuario.Rol == "Administrador" ? "selected" : null)">Administrador</option>
+                    </select>
+
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-success btn-sm">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                </td>
+                </form>
+            </tr>
+        }
+    </tbody>
+</table>

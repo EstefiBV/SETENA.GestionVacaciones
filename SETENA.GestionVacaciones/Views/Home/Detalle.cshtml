@@ -1,0 +1,25 @@
+﻿@* @page
+@model SETENA.GestionVacaciones.Views.Home.DetalleModel
+@{
+}
+ *@
+
+ @model SolicitudVacaciones
+@{
+    ViewData["Title"] = "Detalle de Solicitud";
+}
+
+<div class="container-setena mt-4">
+    <h3>Detalle de Solicitud</h3>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <p><strong>Fecha de Inicio:</strong> @Model.FechaInicio.ToShortDateString()</p>
+            <p><strong>Fecha de Fin:</strong> @Model.FechaFin.ToShortDateString()</p>
+            <p><strong>Estado:</strong> <span class="badge bg-success">@Model.Estado</span></p>
+            <p><strong>Observaciones:</strong> @Model.Observaciones</p>
+
+            <a asp-action="Index" class="btn btn-outline-secondary mt-3">Volver</a>
+        </div>
+    </div>
+</div>
